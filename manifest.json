@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "Follow Cursor",
+    "author": "Lidcer",
+    "version": "1.0",
+
+    "description": "Adds custom mouse pointer that rotate that way you steer",
+    "icons": {
+        "48": "icon_48.png",
+        "128": "icon_128.png"
+    },
+    "web_accessible_resources": ["normal.svg"],
+    "permissions": [
+        "tabs",
+        "http://*/*",
+        "https://*/*"
+    ],
+    "content_scripts": [{
+        "matches": ["http://*/*", "https://*/*"],
+        "js": ["content.js"],
+        "css": ["cursor.css"],
+        "run_at": "document_end"
+    }]
+}
