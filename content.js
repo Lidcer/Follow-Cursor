@@ -1,8 +1,8 @@
-// @ts-ignore
+// @ts-check
 class MousePointer {
 
     constructor() {
-        this.MAX_MOUSE_HISTORY = 100;
+        this.MAX_MOUSE_HISTORY = 50;
         this.mouseHistory = [];
         this.mouse = document.createElement('img');
         this.mouse.src = chrome.extension.getURL('normal.svg');
