@@ -1,6 +1,6 @@
 {
   "name": "follow-cursor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adds custom mouse pointer that rotate in he way that you steer it",
   "main": "webpack.config.js",
   "scripts": {
