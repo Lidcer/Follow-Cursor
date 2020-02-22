@@ -1,0 +1,31 @@
+{
+  "name": "follow-cursor",
+  "version": "1.0.0",
+  "description": "Adds custom mouse pointer that rotate in he way that you steer it",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "node ./generators/generate-extension.js && webpack",
+    "generate-extension": "node ./generators/generate-extension.js",
+    "zip": "node ./generators/generate-zip.js",
+    "webpack-dev:watch": "webpack webpack -w",
+    "build:full": "npm run build && npm run zip"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lidcer/Follow-Cursor.git"
+  },
+  "author": "Lidcer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lidcer/Follow-Cursor/issues"
+  },
+  "homepage": "https://github.com/Lidcer/Follow-Cursor#readme",
+  "devDependencies": {
+    "@types/chrome": "0.0.96",
+    "fs-extra": "^8.1.0",
+    "lodash": "^4.17.15",
+    "webpack": "^4.41.6",
+    "webpack-cli": "^3.3.11",
+    "zip-folder": "^1.0.0"
+  }
+}
