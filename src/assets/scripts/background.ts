@@ -1,11 +1,12 @@
-chrome.storage.sync.get(["origins"], data => {
+import { storageGet, storageSet } from "./crossBrowserSupport";
+
+storageGet("origins", data => {
   if (!data.origins) {
-    chrome.storage.sync.set({ origins: [] });
+    storageSet({ origins: [] });
   }
 });
-
-chrome.storage.sync.get(["sensitivity"], data => {
+storageGet("sensitivity", data => {
   if (!data.sensitivity) {
-    chrome.storage.sync.set({ sensitivity: 15 });
+    storageSet({ sensitivity: 15 });
   }
 });

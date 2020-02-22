@@ -1,3 +1,5 @@
+import { onMessage, getURL, storageGet } from "./crossBrowserSupport";
+
 class MousePointer {
   private readonly MUTATION_OBSERVER_CONFIG: MutationObserverInit = {
     attributes: true,
@@ -11,7 +13,7 @@ class MousePointer {
   private mutationObserver: MutationObserver;
   constructor(maxMouseHistory = 15) {
     this.maxMouseHistory = maxMouseHistory;
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    onMessage((request, sender, sendResponse) => {
       if (request && request.type) {
         if (request.type === "sensitivity") {
           if (request.sensitivity && Number.isInteger(request.sensitivity)) {
@@ -26,7 +28,7 @@ class MousePointer {
       }
     });
 
-    this.mouse.src = chrome.extension.getURL("assets/images/normal.svg");
+    this.mouse.src = getURL("assets/images/normal.svg");
     this.mouse.classList.add("follow-cursor");
     document.body.appendChild(this.mouse);
     document.body.style.cursor = "none";
@@ -137,20 +139,20 @@ class MousePointer {
 
 function main() {
   if (origin.startsWith("chrome")) return;
-  chrome.storage.sync.get(["origins"], data => {
+  storageGet("origins", data => {
     const shouldBeArray: string[] = data.origins;
     if (Array.isArray(shouldBeArray)) {
       if (shouldBeArray.includes(new URL(location.href).hostname)) return;
     }
 
-    chrome.storage.sync.get(["sensitivity"], data => {
+    storageGet("sensitivity", data => {
       const mousePointer = new MousePointer(data.sensitivity);
       mousePointer.message();
     });
   });
 }
 
-chrome.runtime.onMessage.addListener((request, _sender, _sendResponse) => {
+onMessage((request, _sender, _sendResponse) => {
   if (request && request.type) {
     if (request.type === "refresh") location.reload();
   }

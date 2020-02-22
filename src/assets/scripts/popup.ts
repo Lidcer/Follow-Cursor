@@ -1,15 +1,23 @@
+import {
+  sendMessageToTab,
+  storageGet,
+  storageSet,
+  getTabsQuery,
+  sendMessage
+} from "./crossBrowserSupport";
+
 const button = document.getElementById(
   "disable-enable-button"
 ) as HTMLButtonElement;
 const slider = document.getElementById("mouse-history") as HTMLInputElement;
 const enable = "Enable";
 const disable = "Disable";
-let tab: chrome.tabs.Tab;
+let tab: chrome.tabs.Tab | browser.tabs.Tab;
 
 button.addEventListener("click", () => {
   if (!tab) return;
   const url = new URL(tab.url).hostname;
-  chrome.storage.sync.get(["origins"], data => {
+  storageGet("origins", data => {
     const or: string[] = data.origins ? data.origins : [];
     if (button.textContent === disable) {
       if (!or.includes(url)) or.push(url);
@@ -17,8 +25,8 @@ button.addEventListener("click", () => {
       const indexOf = or.indexOf(url);
       if (indexOf !== -1) or.splice(indexOf, 1);
     }
-    chrome.storage.sync.set({ origins: or }, () => {
-      chrome.tabs.sendMessage(tab.id, { type: "refresh" }, _ => {});
+    storageSet({ origins: or }, () => {
+      sendMessageToTab(tab.id, { type: "refresh" });
       update();
     });
   });
@@ -26,20 +34,16 @@ button.addEventListener("click", () => {
 
 slider.addEventListener("change", () => {
   const sensitivity = parseInt(slider.value);
-  chrome.storage.sync.set({ sensitivity });
-  chrome.tabs.query({}, tabs => {
+  storageSet({ sensitivity });
+  getTabsQuery({}, tabs => {
     tabs.forEach(tab => {
-      chrome.tabs.sendMessage(
-        tab.id,
-        { type: "sensitivity", sensitivity },
-        _ => {}
-      );
+      sendMessageToTab(tab.id, { type: "sensitivity", sensitivity });
     });
   });
 });
 
 function getTab() {
-  chrome.tabs.query(
+  getTabsQuery(
     {
       active: true,
       lastFocusedWindow: true
@@ -52,7 +56,7 @@ function getTab() {
 }
 
 function update() {
-  chrome.storage.sync.get(["sensitivity"], data => {
+  storageGet("sensitivity", data => {
     slider.value = data.sensitivity;
   });
 
@@ -72,7 +76,7 @@ function update() {
 }
 
 function changeButton(canEnable: boolean) {
-  chrome.storage.sync.get(["origins"], data => {
+  storageGet("origins", data => {
     if (!data.origins) return;
     const blockedOrigins: string[] = data.origins;
 
